@@ -1,4 +1,3 @@
-# dale1996-code.github.io
 <!DOCTYPE html>
 <html lang="en">
 <head>
