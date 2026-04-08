@@ -1,0 +1,3 @@
+## 2024-04-08 - Added ARIA labels to dynamically generated icon-only buttons and unlabelled inputs
+**Learning:** Screen readers cannot infer the purpose of icon-only buttons (like those using `lucide` icons) or inputs that lack associated `<label>` elements without explicitly provided `aria-label`s. Dynamically generating HTML strings with template literals makes it easy to overlook accessibility attributes.
+**Action:** Always include `aria-label` attributes on `<button>` elements that only contain an `<i>` tag, and on `<input>` elements (like `#staffNameInput` and `#rosterInput`) that rely entirely on placeholder text instead of a dedicated `<label>`. This is especially crucial for dynamic content rendered via JavaScript template strings.
