@@ -76,6 +76,16 @@
     <div class="max-w-6xl mx-auto px-4 py-6 md:py-10" id="app"></div>
 
     <script>
+        function escapeHTML(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
         // --- CONFIG & STATE ---
         const DATA_KEY = "shiftControlDataV5";
         const SAFETY_KEY = "shiftSafetyChecklistV5";
@@ -607,7 +617,7 @@
                             <h2 class="text-lg font-bold text-white mb-4">Shift Notes</h2>
                              <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" 
                                 placeholder="Delivery delays, VIP visits, etc."
-                                onchange="updateInput('shiftNotes', this.value)">${shiftData.shiftNotes}</textarea>
+                                onchange="updateInput('shiftNotes', this.value)">${escapeHTML(shiftData.shiftNotes)}</textarea>
                         </div>
                     </div>
                 </div>
@@ -710,7 +720,7 @@
 
                         <div class="card rounded-2xl p-6">
                             <h3 class="font-bold text-white mb-2">Manager Notes</h3>
-                            <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" onchange="updateInput('managerNotes', this.value)">${shiftData.managerNotes}</textarea>
+                            <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" onchange="updateInput('managerNotes', this.value)">${escapeHTML(shiftData.managerNotes)}</textarea>
                         </div>
                         
                         <div class="no-print grid grid-cols-2 gap-2">
