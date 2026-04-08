@@ -116,6 +116,20 @@
         // Timer State
         const timerState = { label: "", remainingMs: 0, endTime: null, interval: null };
 
+        // --- UTILS ---
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return str;
+            return str.replace(/[&<>"']/g, function (match) {
+                switch (match) {
+                    case '&': return '&amp;';
+                    case '<': return '&lt;';
+                    case '>': return '&gt;';
+                    case '"': return '&quot;';
+                    case "'": return '&#39;';
+                }
+            });
+        }
+
         // --- LOAD DATA ---
         function loadState() {
             try {
@@ -607,7 +621,7 @@
                             <h2 class="text-lg font-bold text-white mb-4">Shift Notes</h2>
                              <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" 
                                 placeholder="Delivery delays, VIP visits, etc."
-                                onchange="updateInput('shiftNotes', this.value)">${shiftData.shiftNotes}</textarea>
+                                onchange="updateInput('shiftNotes', this.value)">${escapeHTML(shiftData.shiftNotes)}</textarea>
                         </div>
                     </div>
                 </div>
@@ -710,7 +724,7 @@
 
                         <div class="card rounded-2xl p-6">
                             <h3 class="font-bold text-white mb-2">Manager Notes</h3>
-                            <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" onchange="updateInput('managerNotes', this.value)">${shiftData.managerNotes}</textarea>
+                            <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" onchange="updateInput('managerNotes', this.value)">${escapeHTML(shiftData.managerNotes)}</textarea>
                         </div>
                         
                         <div class="no-print grid grid-cols-2 gap-2">
