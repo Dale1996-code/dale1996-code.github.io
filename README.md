@@ -170,10 +170,17 @@
             if (!shiftData.date) return;
             // Create a copy to prevent reference issues
             const snapshot = JSON.parse(JSON.stringify(shiftData));
-            const updated = shiftHistory.filter((s) => s.date !== snapshot.date);
-            updated.push(snapshot);
-            updated.sort((a, b) => (a.date < b.date ? 1 : -1));
-            shiftHistory = updated;
+
+            const existingIndex = shiftHistory.findIndex((s) => s.date === snapshot.date);
+            if (existingIndex !== -1) {
+                shiftHistory[existingIndex] = snapshot;
+            } else {
+                let insertIndex = 0;
+                while (insertIndex < shiftHistory.length && shiftHistory[insertIndex].date > snapshot.date) {
+                    insertIndex++;
+                }
+                shiftHistory.splice(insertIndex, 0, snapshot);
+            }
             localStorage.setItem(HISTORY_KEY, JSON.stringify(shiftHistory));
         }
 
