@@ -443,7 +443,7 @@
                             <h1 class="text-2xl font-bold text-white tracking-tight">Shift Control</h1>
                         </div>
                         <div class="md:hidden flex gap-2">
-                             <button onclick="toggleTheme()" class="btn p-2 rounded-lg glass">
+                             <button onclick="toggleTheme()" class="btn p-2 rounded-lg glass" aria-label="Toggle Theme">
                                 <i data-lucide="${theme === "dark" ? "sun" : "moon"}" class="w-4 h-4"></i>
                             </button>
                         </div>
@@ -452,7 +452,7 @@
                     <div id="timerDisplay" class="flex-1 mx-0 md:mx-4"></div>
 
                     <div class="flex flex-wrap gap-2 items-center justify-center md:justify-end">
-                         <button onclick="toggleTheme()" class="hidden md:block btn px-3 py-2 rounded-lg glass">
+                         <button onclick="toggleTheme()" class="hidden md:block btn px-3 py-2 rounded-lg glass" aria-label="Toggle Theme">
                             <i data-lucide="${theme === "dark" ? "sun" : "moon"}" class="w-4 h-4"></i>
                         </button>
                         <button onclick="startNewDay()" class="btn px-3 py-2 rounded-lg glass text-rose-300 border border-rose-500/30" title="Start New Day">
@@ -492,7 +492,7 @@
                                 ${formatTimer(timerState.remainingMs)}
                             </p>
                         </div>
-                        <button onclick="stopTimer()" class="btn p-2 rounded-full hover:bg-white/10 text-slate-400"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        <button onclick="stopTimer()" class="btn p-2 rounded-full hover:bg-white/10 text-slate-400" aria-label="Stop Timer"><i data-lucide="x" class="w-4 h-4"></i></button>
                     </div>
                 `;
             }
@@ -579,7 +579,7 @@
                                 `).join("")}
                              </div>
                              <div class="mt-2 flex gap-2">
-                                <input id="customProblemInput" placeholder="Add custom issue..." class="flex-1 bg-slate-900/50 border border-slate-700 rounded px-2 text-sm text-white">
+                                <input id="customProblemInput" placeholder="Add custom issue..." aria-label="Add custom issue" class="flex-1 bg-slate-900/50 border border-slate-700 rounded px-2 text-sm text-white">
                                 <button onclick="addCustomProblem()" class="btn bg-slate-700 px-3 py-1 rounded text-xs text-white">Add</button>
                              </div>
                         </div>
@@ -589,14 +589,14 @@
                         <div class="card rounded-2xl p-6">
                             <h2 class="text-lg font-bold text-white mb-4">Manage Roster</h2>
                             <div class="flex gap-2 mb-4">
-                                <input id="rosterInput" placeholder="Name" class="flex-1 bg-slate-900/50 border border-slate-700 rounded px-3 py-2 text-white">
-                                <button onclick="addRosterName()" class="btn bg-sky-600 text-white px-3 rounded"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                                <input id="rosterInput" placeholder="Name" aria-label="Employee name" class="flex-1 bg-slate-900/50 border border-slate-700 rounded px-3 py-2 text-white">
+                                <button onclick="addRosterName()" class="btn bg-sky-600 text-white px-3 rounded" aria-label="Add to Roster"><i data-lucide="plus" class="w-4 h-4"></i></button>
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 ${roster.map(n => `
                                     <span class="inline-flex items-center gap-1 bg-slate-800 px-2 py-1 rounded text-xs text-slate-300 border border-slate-700">
                                         ${n}
-                                        <button onclick="removeRosterName('${n}')" class="hover:text-rose-400"><i data-lucide="x" class="w-3 h-3"></i></button>
+                                        <button onclick="removeRosterName('${n}')" class="hover:text-rose-400" aria-label="Remove from Roster"><i data-lucide="x" class="w-3 h-3"></i></button>
                                     </span>
                                 `).join("")}
                                 ${!roster.length ? '<p class="text-slate-500 text-sm italic">Add employees here to enable assignment.</p>' : ''}
@@ -659,9 +659,9 @@
                              <div class="flex justify-between items-center mb-4">
                                 <h3 class="font-bold text-white">Staff Assignments</h3>
                                 <div class="no-print flex gap-2">
-                                    <input id="staffNameInput" placeholder="Name" class="bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-sm text-white w-24">
-                                    <input id="staffZoneInput" placeholder="Zone" class="bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-sm text-white w-24">
-                                    <button onclick="addStaffAssignmentSingle()" class="btn bg-sky-600 px-2 rounded text-white"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                                    <input id="staffNameInput" placeholder="Name" aria-label="Staff name" class="bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-sm text-white w-24">
+                                    <input id="staffZoneInput" placeholder="Zone" aria-label="Staff zone" class="bg-slate-900/50 border border-slate-700 rounded px-2 py-1 text-sm text-white w-24">
+                                    <button onclick="addStaffAssignmentSingle()" class="btn bg-sky-600 px-2 rounded text-white" aria-label="Add Staff Assignment"><i data-lucide="plus" class="w-4 h-4"></i></button>
                                 </div>
                              </div>
                              <table class="w-full text-sm text-left">
@@ -672,8 +672,8 @@
                                     ${shiftData.staffAssignments.map((s, i) => `
                                         <tr class="border-b border-slate-800/50">
                                             <td class="py-2 font-medium text-white">${s.name}</td>
-                                            <td class="py-2"><input class="bg-transparent w-full text-slate-300 focus:text-white" value="${s.zone}" onchange="updateAssignmentZone(${i}, this.value)" placeholder="Assign..."></td>
-                                            <td class="no-print text-right"><button onclick="removeAssignment(${i})" class="text-rose-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                                            <td class="py-2"><input class="bg-transparent w-full text-slate-300 focus:text-white" value="${s.zone}" onchange="updateAssignmentZone(${i}, this.value)" placeholder="Assign..." aria-label="Assign zone to ${s.name}"></td>
+                                            <td class="no-print text-right"><button onclick="removeAssignment(${i})" class="text-rose-400" aria-label="Remove Assignment"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                                         </tr>
                                     `).join("")}
                                     ${!shiftData.staffAssignments.length ? `<tr><td colspan="3" class="py-4 text-center text-slate-500 italic">Use inputs above or Bulk Add in Inputs view to assign staff.</td></tr>` : ''}
