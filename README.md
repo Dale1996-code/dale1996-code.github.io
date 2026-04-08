@@ -163,6 +163,16 @@
             localStorage.setItem(SAFETY_KEY, JSON.stringify({ items: safetyChecklist, completedAt: safetyCompletedAt })); 
         }
         function persistRoster() { localStorage.setItem(ROSTER_KEY, JSON.stringify(roster)); }
+
+        function escapeHTML(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
         function persistSupplies() { localStorage.setItem(SUPPLIES_KEY, JSON.stringify(supplies)); }
         function persistTheme() { localStorage.setItem(THEME_KEY, theme); }
 
@@ -202,6 +212,7 @@
         }
 
         function toggleProblemArea(area) {
+            area = decodeURIComponent(area);
             if (shiftData.problemAreas.includes(area)) {
                 shiftData.problemAreas = shiftData.problemAreas.filter(a => a !== area);
             } else {
@@ -265,6 +276,7 @@
         }
 
         function removeRosterName(name) {
+            name = decodeURIComponent(name);
             if(!confirm(`Remove ${name} from roster?`)) return;
             roster = roster.filter(n => n !== name);
             persistRoster();
@@ -278,6 +290,8 @@
         }
 
         function toggleAssociate(dept, name) {
+            dept = decodeURIComponent(dept);
+            name = decodeURIComponent(name);
             // Check if currently in dept
             const currentlyInDept = shiftData.associates[dept].includes(name);
             
@@ -487,7 +501,7 @@
                 el.innerHTML = `
                     <div class="flex items-center gap-4 justify-center bg-slate-900/80 px-4 py-2 rounded-xl border border-sky-500/30 shadow-lg shadow-sky-500/10">
                         <div class="text-right">
-                            <p class="text-xs text-slate-400 uppercase tracking-wider">${timerState.label}</p>
+                            <p class="text-xs text-slate-400 uppercase tracking-wider">${escapeHTML(timerState.label)}</p>
                             <p class="text-xl font-mono font-bold ${timerState.remainingMs < 60000 ? 'text-rose-400 animate-pulse' : 'text-emerald-400'}">
                                 ${formatTimer(timerState.remainingMs)}
                             </p>
@@ -520,7 +534,8 @@
                             else if (assignedElsewhere) classes = "bg-slate-800 text-slate-500 border-slate-700 opacity-30 cursor-not-allowed";
                             else classes = "glass text-slate-300 hover:bg-slate-700";
 
-                            return `<button onclick="toggleAssociate('${dept}', '${name}')" class="px-2 py-1 text-xs rounded border transition-all ${classes}">${name}</button>`;
+                            const escapedName = escapeHTML(name);
+                            return `<button onclick="toggleAssociate('${encodeURIComponent(dept)}', '${encodeURIComponent(name)}')" class="px-2 py-1 text-xs rounded border transition-all ${classes}">${escapedName}</button>`;
                         }).join("")}
                         ${!roster.length ? `<span class="text-xs text-slate-500 italic">Add names to Roster &rarr;</span>` : ''}
                     </div>
@@ -573,8 +588,8 @@
                              <h2 class="text-lg font-bold text-white mb-2">Problem Areas</h2>
                              <div class="grid sm:grid-cols-3 gap-2">
                                 ${problems.map(p => `
-                                    <button onclick="toggleProblemArea('${p}')" class="text-left text-xs p-2 rounded border ${shiftData.problemAreas.includes(p) ? 'bg-rose-600 text-white border-rose-500' : 'glass text-slate-400 border-transparent hover:border-slate-600'}">
-                                        ${p}
+                                    <button onclick="toggleProblemArea('${encodeURIComponent(p)}')" class="text-left text-xs p-2 rounded border ${shiftData.problemAreas.includes(p) ? 'bg-rose-600 text-white border-rose-500' : 'glass text-slate-400 border-transparent hover:border-slate-600'}">
+                                        ${escapeHTML(p)}
                                     </button>
                                 `).join("")}
                              </div>
@@ -595,8 +610,8 @@
                             <div class="flex flex-wrap gap-2">
                                 ${roster.map(n => `
                                     <span class="inline-flex items-center gap-1 bg-slate-800 px-2 py-1 rounded text-xs text-slate-300 border border-slate-700">
-                                        ${n}
-                                        <button onclick="removeRosterName('${n}')" class="hover:text-rose-400"><i data-lucide="x" class="w-3 h-3"></i></button>
+                                        ${escapeHTML(n)}
+                                        <button onclick="removeRosterName('${encodeURIComponent(n)}')" class="hover:text-rose-400"><i data-lucide="x" class="w-3 h-3"></i></button>
                                     </span>
                                 `).join("")}
                                 ${!roster.length ? '<p class="text-slate-500 text-sm italic">Add employees here to enable assignment.</p>' : ''}
@@ -607,7 +622,7 @@
                             <h2 class="text-lg font-bold text-white mb-4">Shift Notes</h2>
                              <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" 
                                 placeholder="Delivery delays, VIP visits, etc."
-                                onchange="updateInput('shiftNotes', this.value)">${shiftData.shiftNotes}</textarea>
+                                onchange="updateInput('shiftNotes', this.value)">${escapeHTML(shiftData.shiftNotes)}</textarea>
                         </div>
                     </div>
                 </div>
@@ -671,8 +686,8 @@
                                 <tbody class="text-slate-300">
                                     ${shiftData.staffAssignments.map((s, i) => `
                                         <tr class="border-b border-slate-800/50">
-                                            <td class="py-2 font-medium text-white">${s.name}</td>
-                                            <td class="py-2"><input class="bg-transparent w-full text-slate-300 focus:text-white" value="${s.zone}" onchange="updateAssignmentZone(${i}, this.value)" placeholder="Assign..."></td>
+                                            <td class="py-2 font-medium text-white">${escapeHTML(s.name)}</td>
+                                            <td class="py-2"><input class="bg-transparent w-full text-slate-300 focus:text-white" value="${escapeHTML(s.zone)}" onchange="updateAssignmentZone(${i}, this.value)" placeholder="Assign..."></td>
                                             <td class="no-print text-right"><button onclick="removeAssignment(${i})" class="text-rose-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                                         </tr>
                                     `).join("")}
@@ -704,13 +719,13 @@
                          <div class="card rounded-2xl p-6 border-t-4 border-rose-500">
                              <h3 class="font-bold text-white mb-2">Active Issues</h3>
                              ${shiftData.problemAreas.length ? 
-                                `<ul class="list-disc pl-4 text-sm text-slate-300 space-y-1">${shiftData.problemAreas.map(a => `<li>${a}</li>`).join("")}</ul>` 
+                                `<ul class="list-disc pl-4 text-sm text-slate-300 space-y-1">${shiftData.problemAreas.map(a => `<li>${escapeHTML(a)}</li>`).join("")}</ul>`
                                 : `<p class="text-slate-500 text-sm italic">None flagged.</p>`}
                         </div>
 
                         <div class="card rounded-2xl p-6">
                             <h3 class="font-bold text-white mb-2">Manager Notes</h3>
-                            <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" onchange="updateInput('managerNotes', this.value)">${shiftData.managerNotes}</textarea>
+                            <textarea rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded p-2 text-white text-sm" onchange="updateInput('managerNotes', this.value)">${escapeHTML(shiftData.managerNotes)}</textarea>
                         </div>
                         
                         <div class="no-print grid grid-cols-2 gap-2">
@@ -815,7 +830,7 @@
                                     <p class="font-bold text-white">${new Date(h.date).toLocaleDateString()}</p>
                                     <p class="text-sm text-slate-400">${h.palletCount} Pallets • ${Object.values(h.associates).reduce((a,b)=>a+b.length,0)} Staff</p>
                                 </div>
-                                <button onclick='shiftData = ${JSON.stringify(h)}; currentView="dashboard"; render();' class="btn text-sky-400 hover:text-sky-300">Load View &rarr;</button>
+                                <button onclick='shiftData = JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(h))}")); currentView="dashboard"; render();' class="btn text-sky-400 hover:text-sky-300">Load View &rarr;</button>
                             </div>
                         `).join("") : `<p class="text-slate-500 italic">No history saved yet.</p>`}
                     </div>
