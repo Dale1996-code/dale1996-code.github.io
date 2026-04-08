@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        const timerState = { label: "Test", remainingMs: 5000, endTime: null, interval: null };
+        function formatTimer(ms) { return ms; }
+
+        function renderTimerUnoptimized() {
+            const el = document.getElementById("timerDisplayUnoptimized");
+            if (!el) return;
+            el.innerHTML = `<button><i data-lucide="x" class="w-4 h-4"></i></button>`;
+            lucide.createIcons();
+        }
+
+        function renderTimerOptimized() {
+            const el = document.getElementById("timerDisplayOptimized");
+            if (!el) return;
+            el.innerHTML = `<button><i data-lucide="x" class="w-4 h-4"></i></button>`;
+            lucide.createIcons({ root: el });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            window.lucide = {
+                createIcons: function(opts) {
+                    const root = (opts && opts.root) || document;
+                    const elements = root.querySelectorAll('[data-lucide]');
+                    for (let i = 0; i < elements.length; i++) {
+                        elements[i].setAttribute('data-mock-icon', 'true');
+                    }
+                }
+            };
+
+            const container = document.getElementById("dummyContainer");
+            for (let i = 0; i < 5000; i++) {
+                const span = document.createElement("span");
+                span.setAttribute("data-lucide", "check");
+                container.appendChild(span);
+            }
+
+            // let icons render
+            lucide.createIcons();
+
+            setTimeout(() => {
+                const start1 = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    renderTimerUnoptimized();
+                }
+                const end1 = performance.now();
+
+                const start2 = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    renderTimerOptimized();
+                }
+                const end2 = performance.now();
+
+                const el = document.getElementById("results");
+                el.innerText = `Unoptimized: ${end1 - start1}ms\nOptimized: ${end2 - start2}ms`;
+            }, 100);
+        });
+    </script>
+</head>
+<body>
+    <div id="dummyContainer"></div>
+    <div id="timerDisplayUnoptimized"></div>
+    <div id="timerDisplayOptimized"></div>
+    <pre id="results"></pre>
+</body>
+</html>

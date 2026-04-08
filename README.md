@@ -496,7 +496,7 @@
                     </div>
                 `;
             }
-            lucide.createIcons();
+            lucide.createIcons({ root: el });
         }
 
         function renderRosterSelector(dept, label) {

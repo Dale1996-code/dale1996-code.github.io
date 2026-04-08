@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        const timerState = { label: "Test", remainingMs: 5000, endTime: null, interval: null };
+        function formatTimer(ms) { return ms; }
+
+        function renderTimerGlobal() {
+            const el = document.getElementById("timerDisplayGlobal");
+            if (!el) return;
+            el.innerHTML = `<button><i data-lucide="x" class="w-4 h-4"></i></button>`;
+            lucide.createIcons();
+        }
+
+        function renderTimerScoped() {
+            const el = document.getElementById("timerDisplayScoped");
+            if (!el) return;
+            el.innerHTML = `<button><i data-lucide="x" class="w-4 h-4"></i></button>`;
+            if (window.lucide && window.lucide.createIcons) {
+                lucide.createIcons({ root: el });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Add a ton of lucide icons to global scope
+            const container = document.getElementById("dummyContainer");
+            for (let i = 0; i < 5000; i++) {
+                const span = document.createElement("span");
+                span.setAttribute("data-lucide", "check");
+                container.appendChild(span);
+            }
+
+            // let icons render
+            lucide.createIcons();
+
+            setTimeout(() => {
+                const start1 = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    renderTimerGlobal();
+                }
+                const end1 = performance.now();
+
+                const start2 = performance.now();
+                for (let i = 0; i < 1000; i++) {
+                    renderTimerScoped();
+                }
+                const end2 = performance.now();
+
+                const el = document.getElementById("results");
+                el.innerText = `Global: ${end1 - start1}ms\nScoped: ${end2 - start2}ms`;
+            }, 500);
+        });
+    </script>
+</head>
+<body>
+    <div id="dummyContainer"></div>
+    <div id="timerDisplayGlobal"></div>
+    <div id="timerDisplayScoped"></div>
+    <pre id="results"></pre>
+</body>
+</html>
