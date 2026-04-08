@@ -300,9 +300,9 @@
             const el = document.getElementById("staffBulkInput");
             if (!el) return;
             const names = el.value.split("\n").map(n => n.trim()).filter(Boolean);
-            const existing = shiftData.staffAssignments.map(s => s.name);
+            const existing = new Set(shiftData.staffAssignments.map(s => s.name));
             names.forEach(name => {
-                if (!existing.includes(name)) {
+                if (!existing.has(name)) {
                     shiftData.staffAssignments.push({ name, zone: "" });
                 }
             });
